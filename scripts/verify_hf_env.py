@@ -107,6 +107,31 @@ def check_classes(report: Report, spec: EnvSpec) -> None:
         report.check(hasattr(enclosure_reach, name), f"class {name}")
 
 
+def check_fingerprint(report: Report, spec: EnvSpec) -> None:
+    """Catch the submodule resolving different code than the spec was written against."""
+    from environments.fingerprint import compute
+
+    try:
+        actual = compute(spec)
+    except Exception as exc:  # pragma: no cover - environment dependent
+        report.check(False, "class fingerprint", repr(exc))
+        return
+
+    if not spec.class_fingerprint:
+        report.skip("class fingerprint", f"not recorded; current is {actual[:16]}")
+        return
+
+    report.check(
+        actual == spec.class_fingerprint,
+        "class fingerprint",
+        actual[:16]
+        if actual == spec.class_fingerprint
+        else f"{actual[:16]} != recorded {spec.class_fingerprint[:16]} — the submodule "
+        "resolves different code than this spec was reviewed against; if the pin moved "
+        "on purpose, diff the classes before recording the new fingerprint",
+    )
+
+
 def check_hub(report: Report, spec: EnvSpec) -> None:
     url = MANIFEST_URL.format(ds=HF_DATASET, path=spec.hub_path)
     try:
@@ -148,6 +173,7 @@ def main() -> int:
         check_scenes(report, spec)
         check_artifacts(report, spec)
         check_classes(report, spec)
+        check_fingerprint(report, spec)
         if args.online:
             check_hub(report, spec)
 

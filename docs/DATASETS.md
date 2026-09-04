@@ -10,6 +10,7 @@ pointing an evaluation at any of these checkpoints.
 | `data/v12` | 165 | `pact_place_corridor_v10_11_preview_onebottle` | `PactPlaceCorridorV1010FourObjectSampler` | `environments/hf_v12` |
 | `data/v12.1` | 5 | `pact_place_corridor_v10_11_preview_tablecam` | `PactPlaceCorridorV1010FourObjectSampler` | not shipped |
 | `data/v1011d` | 200 | `pact_place_corridor_v10_11d_randomized_clutter` | `PactPlaceCorridorV1011DRandomizedLayoutSampler` | `environments/hf_v1011d` |
+| `data/v107_spaced` | 200 | `pact_place_corridor_v10_7_spaced_bench` | `PactPlaceCorridorV106Sampler` | `environments/hf_v107_spaced` |
 
 Everything above is read off the collect code that produced each dump.
 
@@ -36,21 +37,32 @@ written by hand at publish time. The n200 collect imports
 checkpoint against the four-object sampler is a domain mismatch: the policy was
 trained on randomized clutter layouts and would be tested on a fixed one.
 
+## v107_spaced has not cleared the gate
+
+Its closeout reports `phase0_passed: false` and every `authorizes_*` flag false.
+The 200 episodes are real and the quotas are met on all 24 cells, but the
+collection does not self-authorize training, conversion, or evaluation. It is
+also a third sampler family — `PactPlaceCorridorV106Sampler` across three frozen
+pendant poses — so it is not a variant of either other split, and a checkpoint
+trained on one should not be evaluated against another without saying so.
+
 ## Running them
 
 ```bash
 python scripts/verify_hf_env.py --online      # confirm the checkout matches the data
 python environments/hf_v12/collect.py --target 2 --max-attempts 4
 python environments/hf_v1011d/collect.py --smoke-only --smoke-attempts 2
+python environments/hf_v107_spaced/collect.py --target 1 --workers 1 --gpus 1
 ```
 
 Prefix with the usual `OMP_NUM_THREADS=2 MUJOCO_GL=egl PYOPENGL_PLATFORM=egl`.
 
 ## Why the submodule pin moved
 
-The v1011d dump was collected against molmospaces
-`experiment/pact-vs-act-remediation-v2` (`70dedc07`) and the v12 dump against
-its ancestor `ed045d7`, and the pin now points at the former. One pin is
+The v1011d and v107_spaced dumps were both collected against molmospaces
+`experiment/pact-vs-act-remediation-v2` (`70dedc07`) — from the same working
+tree — and the v12 dump against its ancestor `ed045d7`. The pin points at the
+former, so it is exact for two of the three splits. One pin is
 correct for both because the planner did not change between them:
 `PactPlaceCorridorPolicy` (3655 lines), `PactPlaceCorridorPolicyConfig`,
 `PactPlaceCorridorV106Sampler`, and the body of
