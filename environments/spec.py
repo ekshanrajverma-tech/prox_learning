@@ -48,6 +48,12 @@ class EnvSpec:
     # listed here and checked up front.
     required_artifacts: tuple[str, ...] = field(default=())
 
+    # Hash of every molmospaces class this environment resolves, from
+    # environments.fingerprint. One pin is shared by all environments, so this
+    # is what stops a pin moved for a new environment from quietly changing an
+    # old one; the commit string alone cannot catch that.
+    class_fingerprint: str = ""
+
     notes: str = ""
 
     @property

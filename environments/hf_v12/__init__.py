@@ -21,6 +21,7 @@ SPEC = EnvSpec(
     collect_entrypoint="scripts/run_pact_place_v1011_preview_collect.py",
     contract_module="pact_place_v1010_contract",
     molmospaces_commit="70dedc07f34ed7f8335aed7f694ddef7ef823d3d",
+    class_fingerprint="25e7b81025d7cd6418e2d7d97e175c831ca046953bd404eec2ac29cf95faaa22",
     required_artifacts=("diagnostics_output/pact_place_v9_v0b/palette_v9_1.json",),
     notes=(
         "Four-object household plus standing kitchen extras attached by the "

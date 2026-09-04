@@ -26,6 +26,7 @@ SPEC = EnvSpec(
     collect_entrypoint="scripts/run_pact_place_v107_spaced_n200_collect.py",
     contract_module="pact_place_v107_spaced_n200_collection_contract",
     molmospaces_commit="70dedc07f34ed7f8335aed7f694ddef7ef823d3d",
+    class_fingerprint="9c0ef4ccdcac32ce0a325fd2956e1209affb47cd974293b4d75b2ff3644c0579",
     notes=(
         "200 accepted of 267 attempts, quotas met on all 24 cells: four stagger "
         "families crossed with two approach sides and three pendant poses, "

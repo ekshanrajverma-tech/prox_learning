@@ -26,6 +26,7 @@ SPEC = EnvSpec(
     collect_entrypoint="scripts/run_pact_place_v1011d_n200_collect.py",
     contract_module="pact_place_v1011d_contract",
     molmospaces_commit="70dedc07f34ed7f8335aed7f694ddef7ef823d3d",
+    class_fingerprint="0c2342f12ca502f13a515b2c9e81716239f4931bb8a8cf0dd280a41263cbf6ce",
     required_artifacts=(
         "diagnostics_output/pact_place_v9_v0b/palette_v9_1.json",
         "diagnostics_output/pact_place_v1011d_contract/contract.json",
